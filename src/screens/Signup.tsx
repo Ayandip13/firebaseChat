@@ -27,25 +27,50 @@ const Signup = () => {
         })
     }
 
+    const validate = () => {
+        let isValid = true
+        if (name === '') {
+            isValid = false
+        }
+        if (email === '') {
+            isValid = false
+        }
+        if (mobile === '') {
+            isValid = false
+        }
+        if (password === '') {
+            isValid = false
+        }
+        if (confirmPassword === '') {
+            isValid = false
+        }
+        if (confirmPassword !== password) {
+            isValid = false
+        }
+        return isValid
+    }
+
     const navigation = useNavigation()
     return (
-        <View
-            style={{}}>
+        <View>
             <Text style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center', marginTop: 100 }}>Signup</Text>
             <View style={{ marginHorizontal: 10 }}>
                 <TextInput
+                    placeholderTextColor={'#444'}
                     placeholder='Enter your Name'
                     value={name}
                     onChangeText={(text) => setName(text)}
                     style={{ borderWidth: 1, margin: 10, padding: 10, borderRadius: 5 }}
                 />
                 <TextInput
+                    placeholderTextColor={'#444'}
                     placeholder='Enter your Email'
                     value={email}
                     onChangeText={(text) => setEmail(text)}
                     style={{ borderWidth: 1, marginHorizontal: 10, padding: 10, borderRadius: 5 }}
                 />
                 <TextInput
+                    placeholderTextColor={'#444'}
                     placeholder='Enter your Mobile'
                     keyboardType='number-pad'
                     value={mobile}
@@ -53,6 +78,7 @@ const Signup = () => {
                     style={{ borderWidth: 1, margin: 10, padding: 10, borderRadius: 5 }}
                 />
                 <TextInput
+                    placeholderTextColor={'#444'}
                     placeholder='Enter your Password'
                     value={password}
                     onChangeText={(text) => setPassword(text)}
@@ -61,25 +87,31 @@ const Signup = () => {
                 <TextInput
                     placeholder='Enter your Confirm Password'
                     value={confirmPassword}
+                    placeholderTextColor={'#444'}
                     onChangeText={(text) => setConfirmPassword(text)}
                     style={{ borderWidth: 1, margin: 10, padding: 10, borderRadius: 5 }}
                 />
                 <TouchableOpacity
                     onPress={() => {
-                        registerUser(),
-                            setEmail(''),
-                            setName(''),
-                            setMobile(''),
-                            setPassword(''),
-                            setConfirmPassword('')
+                        if (validate()) {
+                            registerUser(),
+                                setEmail(''),
+                                setName(''),
+                                setMobile(''),
+                                setPassword(''),
+                                setConfirmPassword(''),
+                                navigation.navigate('Login')
+                        } else {
+                            Alert.alert('Please fill all the fields')
+                        }
                     }}
                     style={{
                         backgroundColor: '#fff',
                         marginHorizontal: 80,
-                        padding: 10,
+                        padding: 15,
                         borderRadius: 5,
                         elevation: 5,
-                        marginVertical: 20
+                        marginVertical: 25
                     }}>
                     <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15 }}>Signup</Text>
                 </TouchableOpacity>
