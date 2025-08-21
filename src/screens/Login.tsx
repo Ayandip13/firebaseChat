@@ -1,26 +1,46 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 const Login = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
+    const [visible, setVisible] = useState<boolean>(false)
     const navigation = useNavigation()
 
     const loginUser = () => {
+        setVisible(true)
         firestore()
             .collection('users')
             .where('email', '==', email)
             .get()
             .then(res => {
+                setVisible(false)
                 console.log(JSON.stringify(res.docs[0].data()));
                 Alert.alert('Success', 'Login successful');
                 setEmail('');
                 setPassword('');
+                goToNext(
+                    res.docs[0].data().name,
+                    res.docs[0].data().email,
+                    res.docs[0].data().userId
+                )
             })
-            .catch(err => Alert.alert('Error', err.message));
+            .catch(err => {
+                Alert.alert('Error', err.message)
+                setVisible(false)
+                console.log(err);
+            });
+    }
+
+    const goToNext = async (name: string, email: string, userId: string) => {
+        await AsyncStorage.setItem('name', name);
+        await AsyncStorage.setItem('email', email);
+        await AsyncStorage.setItem('userId', userId);
+        navigation.navigate('Main')
     }
 
     return (
@@ -51,7 +71,7 @@ const Login = () => {
                         fontWeight: 'bold'
                     }}>Don't have an account?
                     <Text
-                        onPress={() => navigation.goBack('SignUp')}
+                        onPress={() => navigation.navigate('SignUp')}
                         style={{
                             color: 'blue',
                             fontSize: 15,
@@ -59,6 +79,9 @@ const Login = () => {
                         }}> SignUp</Text>
                 </Text>
             </View>
+            {
+                visible && <ActivityIndicator style={{ marginTop: 50 }} size={'large'} color={'#000'} />
+            }
         </View>
     )
 }

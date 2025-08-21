@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore'
@@ -122,7 +122,7 @@ const Signup = () => {
                         fontWeight: 'bold'
                     }}>Already have an account?
                     <Text
-                        onPress={() => navigation.navigate('Login')}
+                        onPress={() => navigation.goBack('Login')}
                         style={{
                             color: 'blue',
                             fontSize: 15,
