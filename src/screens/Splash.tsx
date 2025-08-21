@@ -15,6 +15,8 @@ const Splash = () => {
         const Id = await AsyncStorage.getItem('userId')
         if (Id !== null) {
             navigation.navigate('Main')
+        } else {
+            navigation.navigate('Login')
         }
     }
     return (
